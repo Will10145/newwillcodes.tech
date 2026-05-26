@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Project Space</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/typewriter-effect@latest/dist/core.js"></script>
+    <link rel="stylesheet" href="tailwind.css">
+    <script type="module">
+      import createGlobe from "https://cdn.jsdelivr.net/npm/cobe@latest/+esm";
+
+      const canvas = document.getElementById("cobe");
+
+      if (canvas) {
+        let pointerRef = null;
+        let dragStartX = 0;
+        let dragStartRotation = 0;
+        let baseRotation = 0;
+        let rotationOffset = 0;
+        let targetRotationOffset = 0;
+        let rotationVelocity = 0;
+
+        const globe = createGlobe(canvas, {
+          devicePixelRatio: Math.min(window.devicePixelRatio || 1, 2),
+          width: 840,
+          height: 840,
+          phi: 0,
+          theta: 0.2,
+          dark: 1,
+          diffuse: 1.2,
+          mapSamples: 16000,
+          mapBrightness: 6,
+          baseColor: [1, 1, 1],
+          markerColor: [0.2, 0.4, 1],
+          glowColor: [1, 1, 1],
+          markers: [
+
+          ],
+          arcs: [
+  
+          ],
+          arcColor: [0.3, 0.5, 1],
+          arcWidth: 0.5,
+          arcHeight: 0.3,
+        });
+
+        function animate() {
+          const springForce = (targetRotationOffset - rotationOffset) * 0.08;
+
+          rotationVelocity = (rotationVelocity + springForce) * 0.85;
+          rotationOffset += rotationVelocity;
+          baseRotation += 0.0025;
+
+          globe.update({ phi: baseRotation + rotationOffset });
+          requestAnimationFrame(animate);
+        }
+
+        canvas.addEventListener("pointerdown", (event) => {
+          pointerRef = event.clientX;
+          dragStartX = event.clientX;
+          dragStartRotation = rotationOffset;
+          canvas.setPointerCapture?.(event.pointerId);
+        });
+
+        canvas.addEventListener("pointermove", (event) => {
+          if (pointerRef !== null) {
+            const delta = event.clientX - dragStartX;
+            targetRotationOffset = dragStartRotation + delta / 200;
+          }
+        });
+
+        canvas.addEventListener("pointerup", () => {
+          pointerRef = null;
+          dragStartRotation = rotationOffset;
+        });
+
+        canvas.addEventListener("pointercancel", () => {
+          pointerRef = null;
+          dragStartRotation = rotationOffset;
+        });
+
+        animate();
+      }
+    </script>
+
+    <style>
+      /* Modern minimalist scrollbar */
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #030712;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #1f2937;
+        border-radius: 3px;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #3b82f6;
+      }
+
+         .ssh-wrap {
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        overflow: hidden;
+      }
+      .ssh-top {
+        background: var(--grey-cell);
+        padding: 0.5rem 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .ssh-top-label {
+        font-family: var(--mono);
+        font-size: 0.65rem;
+        color: var(--muted);
+      }
+      .copy-btn {
+        font-family: var(--mono);
+        font-size: 0.65rem;
+        color: var(--muted);
+        background: none;
+        border: 1px solid var(--border);
+        padding: 0.2rem 0.6rem;
+        border-radius: 2px;
+        cursor: pointer;
+        transition:
+          color 0.15s,
+          border-color 0.15s;
+      }
+      .copy-btn:hover {
+        color: var(--fg);
+        border-color: var(--fg);
+      }
+      .copy-btn.ok {
+        color: var(--green);
+        border-color: var(--green);
+      }
+      .ssh-cmd {
+        padding: 0.9rem 1rem;
+        font-family: var(--mono);
+        font-size: 0.85rem;
+        color: var(--fg);
+        cursor: text;
+        user-select: all;
+        white-space: nowrap;
+        overflow-x: auto;
+      }
+      .ssh-cmd::before {
+        content: "$ ";
+        color: var(--muted);
+      }
+    </style>
+  </head>
+  <body
+    class="bg-[#030712] text-gray-100 font-sans antialiased selection:bg-blue-500 selection:text-white"
+  >
+    <!-- NAV BAR -->
+
+
+
+
+      <!-- Subtle dark ambient glow -->
+      <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[120px] pointer-events-none"
+      ></div>
+
+      <div
+        class="max-w-5xl mx-auto px-6 w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10"
+      >
+        <!-- Text Info -->
+        <div class="space-y-6 text-center md:text-left">
+          <h1
+            class="text-4xl sm:text-5xl font-bold tracking-tight text-white leading-tight"
+            id="app"
+          ></h1>
+          <p
+            class="text-base text-gray-400 max-w-md mx-auto md:mx-0 font-light leading-relaxed"
+          >
+            i bought a domain so i have to put something here ig
+          </p>
+          <div
+            class="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 pt-2"
+          >
+            <a
+              href="#projects"
+              class="w-full sm:w-auto px-6 py-2.5 bg-white text-gray-950 font-medium text-sm rounded-lg hover:bg-gray-200 transition-all duration-200 shadow-sm text-center"
+            >
+              Explore Projects
+            </a>
+            <a
+              href="https://github.com/Will10145"
+              target="_blank"
+              class="w-full sm:w-auto px-6 py-2.5 bg-gray-900 text-gray-300 font-medium text-sm rounded-lg border border-gray-800 hover:bg-gray-800 transition-all duration-200 flex items-center justify-center space-x-2"
+            >
+              <i data-lucide="github" class="w-4 h-4"></i>
+              <span>GitHub</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- COBE Canvas Container -->
+        <div
+          class="flex justify-center items-center relative h-[320px] sm:h-[420px] cursor-grab active:cursor-grabbing"
+        >
+          <!-- COBE requires a fixed pixel size aspect ratio canvas -->
+          <canvas
+            id="cobe"
+            style="
+              width: 100%;
+              height: 100%;
+              max-width: 420px;
+              max-height: 420px;
+            "
+            width="840"
+            height="840"
+          ></canvas>
+        </div>
+      </div>
+    </header>
+
+    <!-- PROJECTS SECTION -->
+    <section id="projects" class="py-24 border-t border-gray-900 bg-[#050b14]">
+      <div class="max-w-5xl mx-auto px-6">
+        <div class="mb-12">
+          <h2 class="text-2xl font-bold tracking-tight text-white mb-2">
+            My Projects
+          </h2>
+          <p class="text-sm text-gray-400">
+            Things I've broken and put back together.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Project 1 -->
+          <div
+            class="p-6 bg-[#090f1c] border border-gray-800/80 rounded-xl hover:border-blue-500/30 transition-all duration-300 flex flex-col justify-between"
+          >
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span
+                  class="text-xs font-mono px-2 py-1 bg-blue-500/10 text-blue-400 rounded"
+                  >Docker</span
+                >
+                <i data-lucide="folder" class="w-5 h-5 text-gray-500"></i>
+              </div>
+              <h3 class="text-lg font-bold text-gray-100 mb-2">Authentik</h3>
+              <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                A authentication SSO software. I didn't make it I just set it up
+                and it's actually pretty good
+              </p>
+            </div>
+            <div class="flex space-x-4 pt-4 border-t border-gray-800/50">
+              <a
+                href="https://github.com/goauthentik/authentik"
+                target="_blank"
+                class="text-xs text-gray-300 hover:text-white flex items-center space-x-1"
+              >
+                <i data-lucide="github" class="w-3.5 h-3.5"></i>
+                <span>Source</span>
+              </a>
+            </div>
+
+            <div class="flex space-x-4 pt-4 border-t border-gray-800/50">
+              <a
+                href="https://auth.willcodes.tech/"
+                target="_blank"
+                class="text-xs text-gray-300 hover:text-white flex items-center space-x-1"
+              >
+                <i data-lucide="github" class="w-3.5 h-3.5"></i>
+                <span>See it in action</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Project 2 -->
+          <div
+            class="p-6 bg-[#090f1c] border border-gray-800/80 rounded-xl hover:border-indigo-500/30 transition-all duration-300 flex flex-col justify-between"
+          >
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span
+                  class="text-xs font-mono px-2 py-1 bg-indigo-500/10 text-indigo-400 rounded"
+                  >Docker</span
+                >
+                <i data-lucide="folder" class="w-5 h-5 text-gray-500"></i>
+              </div>
+              <h3 class="text-lg font-bold text-gray-100 mb-2">Arcane</h3>
+              <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                Once again I didn't make it I just set it up and it was a
+                nightmare
+              </p>
+            </div>
+            <div class="flex space-x-4 pt-4 border-t border-gray-800/50">
+              <a
+                href="https://github.com/getarcaneapp/arcane"
+                target="_blank"
+                class="text-xs text-gray-300 hover:text-white flex items-center space-x-1"
+              >
+                <i data-lucide="github" class="w-3.5 h-3.5"></i>
+                <span>Source</span>
+              </a>
+            </div>
+
+            <div class="flex space-x-4 pt-4 border-t border-gray-800/50">
+              <a
+                href="https://arcane.willcodes.tech/"
+                target="_blank"
+                class="text-xs text-gray-300 hover:text-white flex items-center space-x-1"
+              >
+                <i data-lucide="github" class="w-3.5 h-3.5"></i>
+                <span>See it in action</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- PROJECT 3 -->
+          <div
+            class="p-6 bg-[#090f1c] border border-gray-800/80 rounded-xl hover:border-indigo-500/30 transition-all duration-300 flex flex-col justify-between"
+          >
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span
+                  class="text-xs font-mono px-2 py-1 bg-indigo-500/10 text-indigo-400 rounded"
+                  >Python</span
+                >
+                <i data-lucide="folder" class="w-5 h-5 text-gray-500"></i>
+              </div>
+              <h3 class="text-lg font-bold text-gray-100 mb-2">
+                Wordle In The Terminal
+              </h3>
+              <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                I made this one, it's pretty good :D. This is Wordle in the Cli,
+                and anybody can play using ssh. Yep, even you! If you want to
+                play it right now, copy and paste this into terminal:
+                           <div class="ssh-wrap">
+              <div class="ssh-top">
+                <span class="ssh-top-label">connect</span>
+                <button class="copy-btn" id="copybtn" onclick="doCopy()">
+                  copy
+                </button>
+              </div>
+              <div class="ssh-cmd">
+                ssh -p 2222 wordle@wordle.willcodes.tech
+              </div>
+            </div>
+              </p>
+            </div>
+            <div class="flex space-x-4 pt-4 border-t border-gray-800/50">
+              <a
+                href="https://github.com/Will10145/WordleCli"
+                target="_blank"
+                class="text-xs text-gray-300 hover:text-white flex items-center space-x-1"
+              >
+                <i data-lucide="github" class="w-3.5 h-3.5"></i>
+                <span>Source</span>
+              </a>
+            </div>
+
+            <div class="flex space-x-4 pt-4 border-t border-gray-800/50">
+              <a
+                href="https://wordle.willcodes.tech/"
+                target="_blank"
+                class="text-xs text-gray-300 hover:text-white flex items-center space-x-1"
+              >
+                <i data-lucide="github" class="w-3.5 h-3.5"></i>
+                <span>See it in action</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Project 4 -->
+                     <div
+            class="p-6 bg-[#090f1c] border border-gray-800/80 rounded-xl hover:border-indigo-500/30 transition-all duration-300 flex flex-col justify-between"
+          >
+            <div>
+              <div class="flex items-center justify-between mb-4">
+                <span
+                  class="text-xs font-mono px-2 py-1 bg-indigo-500/10 text-indigo-400 rounded"
+                  >JS</span
+                >
+                <i data-lucide="folder" class="w-5 h-5 text-gray-500"></i>
+              </div>
+              <h3 class="text-lg font-bold text-gray-100 mb-2">WebProxy</h3>
+              <p class="text-gray-400 text-sm leading-relaxed mb-4">
+                My school blocks all games. So I went and made a basic webproxy with HTTP authentication and an allowlist so I can play coolmathsgames again! It runs from cloudflare workers
+              </p>
+            </div>
+
+
+            <div class="flex space-x-4 pt-4 border-t border-gray-800/50">
+              <a
+                href="https://proxy.willcodes.tech/"
+                target="_blank"
+                class="text-xs text-gray-300 hover:text-white flex items-center space-x-1"
+              >
+                <i data-lucide="github" class="w-3.5 h-3.5"></i>
+                <span>See it in action</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+
+    <!-- FOOTER -->
+    <footer
+      class="py-12 border-t border-gray-900 text-center text-xs text-gray-600"
+    >
+      <p>&copy; 2026. Made with HTML, Tailwind, and Cobe.</p>
+    </footer>
+
+    <script>
+
+              function doCopy() {
+        navigator.clipboard
+          .writeText("ssh -p 2222 wordle@wordle.willcodes.tech")
+          .then(() => {
+            const b = document.getElementById("copybtn");
+            b.textContent = "copied";
+            b.classList.add("ok");
+            setTimeout(() => {
+              b.textContent = "copy";
+              b.classList.remove("ok");
+            }, 2000);
+          });
+      }
+      var app = document.getElementById("app");
+
+      var typewriter = new Typewriter(app, {
+        loop: false,
+        delay: 75,
+      });
+
+      typewriter
+        .start()
+        .pauseFor(2500)
+        .typeString("Hello, welcome to <br/> my website!")
+        .pauseFor(1000)
+        .deleteChars(11)
+        .typeString(
+          '<span class="bg-gradient-to-r from-blue-400 via-sky-400 to-indigo-400 bg-clip-text text-transparent">my domain!</span>',
+        )
+        .pauseFor(1000)
+        .deleteChars(11)
+        .typeString(
+          '<span class="bg-gradient-to-r from-red-400 via-green-400 to-orange-400 bg-clip-text text-transparent">my place on the internet!</span>',
+        )
+        .pauseFor(1000)
+        .deleteChars(25)
+        .typeString(
+          '<span id="willcodesheading" class="bg-gradient-to-r from-blue-400 via-sky-400 to-indigo-400 bg-clip-text text-transparent">willcodes.tech</span>',
+        )
+        .pauseFor(50000)
+        .typeString("\nthat was the last one scroll down now")
+        .pauseFor(1000)
+        .deleteChars(38);
+    </script>
+  </body>
+</html>
